@@ -109,7 +109,9 @@ images.forEach((image) => {
         if (event.target === extended) {
           extended.classList.remove("active");
           setTimeout(() => {
-            body.removeChild(extended);
+            if (document.body.contains(extended)) {
+              document.body.removeChild(extended);
+            }
             item.classList.remove("clicked");
             item.src = image.preview;
           }, 300);
