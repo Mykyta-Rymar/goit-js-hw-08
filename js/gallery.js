@@ -65,12 +65,10 @@ const images = [
 ];
 
 const listEl = document.querySelector(".gallery");
-const body = document.querySelector("body");
 
 images.forEach((image) => {
   const li = document.createElement("li");
   const item = document.createElement("img");
-  li.appendChild(item);
 
   item.className = "gallery-img";
   item.src = image.preview;
@@ -79,62 +77,14 @@ images.forEach((image) => {
   item.addEventListener("click", function (event) {
     event.preventDefault();
 
-    if (item.classList.contains("clicked")) {
-      item.classList.remove("clicked");
-      item.src = image.preview;
+    const instance = basicLightbox.create(`
+      <img src="${image.original}" alt="${image.description}" style="max-width: 1440px; max-height: 696px;" />
+    `);
 
-      const extended = document.querySelector(".extended");
-      if (extended) {
-        body.removeChild(extended);
-      }
-    } else {
-      item.classList.add("clicked");
-
-      const prevExtended = document.querySelector(".extended");
-      if (prevExtended) {
-        body.removeChild(prevExtended);
-      }
-
-      const extended = document.createElement("div");
-      extended.classList.add("extended");
-      extended.style.width = "100%";
-      extended.style.height = "100%";
-      body.appendChild(extended);
-
-      setTimeout(() => {
-        extended.classList.add("active");
-      }, 10);
-
-      extended.addEventListener("click", function (event) {
-        if (event.target === extended) {
-          extended.classList.remove("active");
-          setTimeout(() => {
-            if (document.body.contains(extended)) {
-              document.body.removeChild(extended);
-            }
-            item.classList.remove("clicked");
-            item.src = image.preview;
-          }, 300);
-        }
-      });
-
-      const imgExt = document.createElement("img");
-      imgExt.classList = "img-extended";
-      imgExt.src = image.original;
-      imgExt.style.width = "1112px";
-      imgExt.style.height = "640px";
-
-      extended.appendChild(imgExt);
-
-      extended.addEventListener("click", function (event) {
-        event.preventDefault();
-        body.removeChild(extended);
-        item.classList.remove("clicked");
-        item.src = image.preview;
-      });
-    }
+    instance.show();
   });
 
   li.classList.add("gallery-item");
+  li.appendChild(item);
   listEl.appendChild(li);
 });
