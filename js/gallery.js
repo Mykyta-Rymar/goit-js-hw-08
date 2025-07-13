@@ -69,19 +69,25 @@ const listItems = [];
 
 images.forEach((image) => {
   const li = document.createElement("li");
+  const par = document.createElement("a");
   const item = document.createElement("img");
 
   item.className = "gallery-img";
   item.src = image.preview;
   item.alt = image.description;
-  item.dataset.source = image.preview;
+  item.dataset.source = image.original;
+
+  par.className = "gallery-link";
+  par.href = image.original;
 
   li.classList.add("gallery-item");
-  li.append(item);
+  li.append(par);
+  par.append(item);
   listItems.push(li);
 });
 
 listEl.addEventListener("click", function (event) {
+  event.preventDefault();
   const img = event.target.closest("img.gallery-img");
   if (!img) return;
 
