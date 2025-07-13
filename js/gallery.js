@@ -65,6 +65,7 @@ const images = [
 ];
 
 const listEl = document.querySelector(".gallery");
+const listItems = [];
 
 images.forEach((image) => {
   const li = document.createElement("li");
@@ -73,18 +74,25 @@ images.forEach((image) => {
   item.className = "gallery-img";
   item.src = image.preview;
   item.alt = image.description;
-
-  item.addEventListener("click", function (event) {
-    event.preventDefault();
-
-    const instance = basicLightbox.create(`
-      <img src="${image.original}" alt="${image.description}" style="max-width: 1440px; max-height: 696px;" />
-    `);
-
-    instance.show();
-  });
+  item.dataset.source = image.preview;
 
   li.classList.add("gallery-item");
-  li.appendChild(item);
-  listEl.appendChild(li);
+  li.append(item);
+  listItems.push(li);
 });
+
+listEl.addEventListener("click", function (event) {
+  const img = event.target.closest("img.gallery-img");
+  if (!img) return;
+
+  const image = images.find((imgObj) => imgObj.preview === img.src);
+  if (!image) return;
+
+  const instance = basicLightbox.create(`
+    <img src="${image.original}" alt="${image.description}" style="max-width: 1440px; max-height: 696px;" />
+  `);
+
+  instance.show();
+});
+
+listEl.append(...listItems);
